@@ -717,29 +717,14 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     ```
 
-8. <a name="native">Native & Host Objects</a>
-
-    Avoid extending native and host objects suc
-
-    ### Don't do stupid shit and everything will be ok.
-
-    To reinforce this concept, please watch the following presentation:
-
-    #### “Everything is Permitted: Extending Built-ins” by Andrew Dupont (JSConf2011, Portland, Oregon)
-
-    <iframe src="http://blip.tv/play/g_Mngr6LegI.html" width="480" height="346" frameborder="0" allowfullscreen></iframe><embed type="application/x-shockwave-flash" src="http://a.blip.tv/api.swf#g_Mngr6LegI" style="display:none"></embed>
-
-    http://blip.tv/jsconf/jsconf2011-andrew-dupont-everything-is-permitted-extending-built-ins-5211542
-
-
-9. <a name="comments">Comments</a>
+8. <a name="comments">Comments</a>
 
     #### Single line above the code that is subject
     #### Multiline is good
     #### JSDoc style is good, but requires a significant time investment
 
 
-10. <a name="language">One Language Code</a>
+9. <a name="language">One Language Code</a>
 
     Programs should be written in one language, whatever that language may be, as dictated by the maintainer or maintainers.
 
