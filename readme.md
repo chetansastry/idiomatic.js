@@ -68,12 +68,11 @@ Projects _must_ include some form of unit, reference, implementation or function
 
  * [Whitespace](#whitespace)
  * [Beautiful Syntax](#spacing)
- * [Type Checking (Courtesy jQuery Core Style Guidelines)](#type)
+ * [Type Checking](#type)
  * [Conditional Evaluation](#cond)
  * [Practical Style](#practical)
  * [Naming](#naming)
  * [Misc](#misc)
- * [Native & Host Objects](#native)
  * [Comments](#comments)
  * [One Language Code](#language)
 
