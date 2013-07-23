@@ -295,15 +295,7 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
     ```
 
 
-    C. Exceptions, Slight Deviations
-
-    ```javascript
-
-    // No deviations (Intentionally left blank for the sake of maintaining sequence numbers)
-
-    ```
-
-    D. Consistency Always Wins
+    C. Consistency Always Wins
 
     In sections 2.A-2.C, the whitespace rules are set forth as a recommendation with a simpler, higher purpose: consistency.
     It's important to note that formatting preferences, such as "inner whitespace" should be considered optional, but only one style should exist across the entire source of your project.
@@ -332,7 +324,7 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     ```
 
-    E. Quotes
+    D. Quotes
 
     Use only single quotes for strings for the sake of consistency. 
 
@@ -464,39 +456,35 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
     // 5.1.1
     // A Practical Module
 
-    (function(global) {
-      var Module = (function() {
+    define('path/to/module', ['path/to/dep1', 'path/to/dep2'], function(dep1, dep2) {
 
-        var data = "secret";
-
-        return {
-          // This is some boolean property
-          bool: true,
-          // Some string value
-          string: "a string",
-          // An array property
-          array: [ 1, 2, 3, 4 ],
-          // An object property
-          object: {
-            lang: "en-Us"
-          },
-          getData: function() {
-            // get the current value of `data`
-            return data;
-          },
-          setData: function(value) {
-            // set the value of `data` and return it
-            return (data = value);
-          }
-        };
-      })();
+      var data = "secret";
 
       // Other things might happen here
 
       // expose our module to the global object
-      global.Module = Module;
+      return {
+        // This is some boolean property
+        bool: true,
+        // Some string value
+        string: "a string",
+        // An array property
+        array: [ 1, 2, 3, 4 ],
+        // An object property
+        object: {
+          lang: "en-Us"
+        },
+        getData: function() {
+          // get the current value of `data`
+          return data;
+        },
+        setData: function(value) {
+          // set the value of `data` and return it
+          return (data = value);
+        }
+      };
 
-    })(this);
+    });
 
     ```
 
@@ -505,13 +493,12 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
     // 5.2.1
     // A Practical Constructor
 
-    (function(global) {
+    define('path/to/module', ['path/to/dep1', 'path/to/dep2'], function(dep1, dep2) {
 
       function Ctor(foo) {
 
         this.foo = foo;
 
-        return this;
       }
 
       Ctor.prototype.getFoo = function() {
@@ -522,17 +509,10 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
         return (this.foo = val);
       };
 
-
-      // To call constructor's without `new`, you might do this:
-      var ctor = function(foo) {
-        return new Ctor(foo);
-      };
-
-
       // expose our constructor to the global object
-      global.ctor = ctor;
+      return Ctor;
 
-    })(this);
+    });
 
     ```
 
@@ -611,12 +591,6 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
 
     // 6.A.3.5
-    // Naming regular expressions
-
-    rDesc = //;
-
-
-    // 6.A.3.6
     // From the Google Closure Library Style Guide
 
     functionNamesLikeThis;
@@ -684,7 +658,7 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     C. Use `thisArg`
 
-    Several Array methods of underscore support `thisArg` signature, which should be used whenever possible
+    Several Array methods of underscore.js support `thisArg` signature, which should be used whenever possible
 
     ```javascript
 
@@ -714,116 +688,7 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     This section will serve to illustrate ideas and concepts that should not be considered dogma, but instead exists to encourage questioning practices in an attempt to find better ways to do common JavaScript programming tasks.
 
-    A. Using `switch` should be avoided, modern method tracing will blacklist functions with switch statements
-
-    There seems to be drastic improvements to the execution of `switch` statements in latest releases of Firefox and Chrome.
-    http://jsperf.com/switch-vs-object-literal-vs-module
-
-    Notable improvements can be witnesses here as well:
-    https://github.com/rwldrn/idiomatic.js/issues/13
-
-    ```javascript
-
-    // 7.A.1.1
-    // An example switch statement
-
-    switch(foo) {
-      case "alpha":
-        alpha();
-        break;
-      case "beta":
-        beta();
-        break;
-      default:
-        // something to default to
-        break;
-    }
-
-    // 7.A.1.2
-    // A alternate approach that supports composability and reusability is to
-    // use an object to store "cases" and a function to delegate:
-
-    var cases, delegator;
-
-    // Example returns for illustration only.
-    cases = {
-      alpha: function() {
-        // statements
-        // a return
-        return [ "Alpha", arguments.length ];
-      },
-      beta: function() {
-        // statements
-        // a return
-        return [ "Beta", arguments.length ];
-      },
-      _default: function() {
-        // statements
-        // a return
-        return [ "Default", arguments.length ];
-      }
-    };
-
-    delegator = function() {
-      var args, key, delegate;
-
-      // Transform arguments list into an array
-      args = [].slice.call(arguments);
-
-      // shift the case key from the arguments
-      key = args.shift();
-
-      // Assign the default case handler
-      delegate = cases._default;
-
-      // Derive the method to delegate operation to
-      if (cases.hasOwnProperty(key)) {
-        delegate = cases[ key ];
-      }
-
-      // The scope arg could be set to something specific,
-      // in this case, |null| will suffice
-      return delegate.apply(null, args);
-    };
-
-    // 7.A.1.3
-    // Put the API in 7.A.1.2 to work:
-
-    delegator("alpha", 1, 2, 3, 4, 5);
-    // [ "Alpha", 5 ]
-
-    // Of course, the `case` key argument could easily be based
-    // on some other arbitrary condition.
-
-    var caseKey, someUserInput;
-
-    // Possibly some kind of form input?
-    someUserInput = 9;
-
-    if (someUserInput > 10) {
-      caseKey = "alpha";
-    } else {
-      caseKey = "beta";
-    }
-
-    // or...
-
-    caseKey = someUserInput > 10 ? "alpha" : "beta";
-
-    // And then...
-
-    delegator(caseKey, someUserInput);
-    // [ "Beta", 1 ]
-
-    // And of course...
-
-    delegator();
-    // [ "Default", 0 ]
-
-
-    ```
-
-    B. Early returns promote code readability with negligible performance difference
+    A. Early returns promote code readability with negligible performance difference
 
     ```javascript
 
@@ -852,10 +717,9 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     ```
 
-
 8. <a name="native">Native & Host Objects</a>
 
-    The basic principle here is:
+    Avoid extending native and host objects suc
 
     ### Don't do stupid shit and everything will be ok.
 
@@ -872,20 +736,12 @@ The following sections outline a _reasonable_ style guide for modern JavaScript 
 
     #### Single line above the code that is subject
     #### Multiline is good
-    #### End of line comments are prohibited!
     #### JSDoc style is good, but requires a significant time investment
 
 
 10. <a name="language">One Language Code</a>
 
     Programs should be written in one language, whatever that language may be, as dictated by the maintainer or maintainers.
-
-## Appendix
-
-### Comma First.
-
-Any project that cites this document as its base style guide will not accept comma first code formatting, unless explicitly specified otherwise by that project's author.
-
 
 
 ----------
